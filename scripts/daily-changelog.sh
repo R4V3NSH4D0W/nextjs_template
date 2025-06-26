@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Daily changelog automation with per-contributor separation
-echo "📝 Generating daily changelogs for contributors..."
+# Unified daily changelog generator for contributors
+# Combines both terminal output and file generation
 
-# Create changelogs directory if it doesn't exist
-mkdir -p changelogs
-mkdir -p changelogs/daily
+echo "📊 Daily Changelog Generator - $(date +"%Y-%m-%d")"
+echo "=================================================="
+echo ""
+
+# Create directories
 mkdir -p changelogs/daily/contributors
 
-# Get today's date
+# Get today's date and commits
 TODAY=$(date +"%Y-%m-%d")
-
-# Get today's commits with detailed info
 TODAYS_COMMITS=$(git log --pretty=format:"%h|%an|%ad|%s" --date=short --since="$TODAY 00:00:00" --until="$TODAY 23:59:59")
 
 if [[ -z "$TODAYS_COMMITS" ]]; then
@@ -19,19 +19,17 @@ if [[ -z "$TODAYS_COMMITS" ]]; then
     exit 0
 fi
 
-# Create temp files for contributor separation
+# Initialize temp files and counters
 TEMP_DIR=$(mktemp -d)
 AUTHORS_FILE="$TEMP_DIR/authors.txt"
 touch "$AUTHORS_FILE"
-
-# Initialize counters
 FEAT_COUNT=0
 FIX_COUNT=0
 OTHER_COUNT=0
 
 echo "📅 Processing commits for $TODAY..."
 
-# Process commits and separate by author
+# Process commits and display to terminal
 while IFS='|' read -r hash author date message; do
     if [[ -z "$hash" || "$message" == "Merge"* ]]; then
         continue
@@ -48,31 +46,46 @@ while IFS='|' read -r hash author date message; do
     # Create contributor files if they don't exist
     touch "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
     
-    # Categorize and count
+    # Categorize, display, and save
     if [[ "$message" == feat:* || "$message" == feat\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^feat[^:]*: *//')
-        ENTRY="- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        echo "✨ FEATURE: $message"
+        echo "   👤 Author: $author | 🔗 Commit: $hash"
+        FILE_ENTRY="- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((FEAT_COUNT++))
     elif [[ "$message" == fix:* || "$message" == fix\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^fix[^:]*: *//')
-        ENTRY="- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        echo "🐛 BUGFIX: $message"
+        echo "   👤 Author: $author | 🔗 Commit: $hash"
+        FILE_ENTRY="- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((FIX_COUNT++))
     else
         DESC=$(echo "$message" | sed 's/^[^:]*: *//')
-        ENTRY="- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        echo "🔧 OTHER: $message"
+        echo "   👤 Author: $author | 🔗 Commit: $hash"
+        FILE_ENTRY="- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((OTHER_COUNT++))
     fi
+    echo ""
     
 done <<< "$TODAYS_COMMITS"
 
-# Generate daily aggregate report
+# Display summary
 TOTAL_COUNT=$((FEAT_COUNT + FIX_COUNT + OTHER_COUNT))
-DAILY_REPORT_FILE="changelogs/daily/${TODAY}.md"
+echo "📈 Summary for $TODAY:"
+echo "   Total commits: $TOTAL_COUNT"
+echo "   ✨ Features: $FEAT_COUNT"
+echo "   🐛 Bug fixes: $FIX_COUNT"
+echo "   🔧 Other: $OTHER_COUNT"
+echo ""
 
-echo "� Generating daily aggregate report..."
+# Generate daily aggregate report
+DAILY_REPORT_FILE="changelogs/daily/${TODAY}.md"
+echo "📊 Generating daily aggregate report..."
+
 cat > "$DAILY_REPORT_FILE" << EOF
 # Daily Report - $TODAY
 
@@ -187,14 +200,13 @@ echo "" >> changelogs/README.md
 echo "- 📁 [View all daily reports](./daily/)" >> changelogs/README.md
 echo "- 👥 [View all contributor reports](./daily/contributors/)" >> changelogs/README.md
 
-# Clean up temp directory
+# Clean up
 rm -rf "$TEMP_DIR"
 
-if [[ $TOTAL_COUNT -gt 0 ]]; then
-    echo "✅ Daily reports generated successfully!"
-    echo "   📄 Aggregate report: $DAILY_REPORT_FILE"
-    echo "   👥 Contributor reports: $CONTRIBUTOR_COUNT files"
-    echo "   📊 Total commits processed: $TOTAL_COUNT"
-else
-    echo "ℹ️ No commits found for today ($TODAY)"
-fi
+# Final output
+echo "✅ Daily reports generated successfully!"
+echo "   📄 Aggregate report: $DAILY_REPORT_FILE"
+echo "   👥 Contributor reports: $CONTRIBUTOR_COUNT files"
+echo "   📊 Total commits processed: $TOTAL_COUNT"
+echo ""
+echo "💡 Daily reports are automatically updated via GitHub Actions!"

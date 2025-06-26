@@ -1,4 +1,4 @@
-name: Auto Generate Daily Changelogs
+name: Daily Changelog Automation
 
 on:
   push:
@@ -6,11 +6,15 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
+  schedule:
+    # Run daily at 11:59 PM UTC to capture all daily activity
+    - cron: '59 23 * * *'
+  workflow_dispatch: # Allow manual triggering
 
 jobs:
   generate-daily-changelogs:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event.pull_request.merged == true)
+    if: github.event_name == 'push' || (github.event.pull_request.merged == true) || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout code
@@ -19,11 +23,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
@@ -31,13 +30,8 @@ jobs:
 
       - name: Generate Daily Changelogs
         run: |
-          chmod +x ./scripts/update-changelog.sh
-          ./scripts/update-changelog.sh
-
-      - name: Generate Daily Reports
-        run: |
-          chmod +x ./scripts/daily-report.sh
-          ./scripts/daily-report.sh
+          chmod +x ./scripts/daily-changelog.sh
+          ./scripts/daily-changelog.sh
 
       - name: Check for changes
         id: changes
