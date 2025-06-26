@@ -160,7 +160,34 @@ chore: update dependencies
 - `refactor:` ♻️ Code refactoring
 - `chore:` 🔧 Maintenance tasks
 
-## 🚀 Deployment
+## � Continuous Integration
+
+### Multi-Node.js Testing
+
+The CI pipeline tests across multiple Node.js versions:
+
+- **Node.js 18.x** - LTS version
+- **Node.js 20.x** - Current LTS
+- **Node.js 22.x** - Latest stable
+
+### CI Pipeline Features
+
+- ✅ **Cross-platform testing** (Ubuntu-based)
+- ✅ **Separate formatting validation** to avoid version conflicts
+- ✅ **Enhanced error reporting** with helpful debug information
+- ✅ **Optimized caching** for faster builds
+- ✅ **Robust formatting checks** that work consistently
+
+### Formatting Scripts
+
+| Script                 | Purpose                        |
+| ---------------------- | ------------------------------ |
+| `npm run format`       | Fix formatting issues          |
+| `npm run format:check` | Check formatting (development) |
+| `npm run format:ci`    | Strict formatting check (CI)   |
+| `npm run format:fix`   | Format and stage changes       |
+
+## �🚀 Deployment
 
 ### Vercel (Recommended)
 
