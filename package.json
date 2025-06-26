@@ -29,14 +29,13 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "format": "prettier --write . --log-level warn",
-    "format:check": "prettier --check . --log-level warn",
-    "format:fix": "prettier --write . --log-level warn && git add .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
     "prepare": "husky",
     "pre-commit": "lint-staged",
-    "clean": "./scripts/clean.sh",
-    "daily-report": "./scripts/daily-changelog.sh"
+    "clean": "tsx scripts/clean.ts",
+    "daily-report": "tsx scripts/daily-changelog.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -62,6 +61,8 @@
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.1",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5",
     "zod": "^3.25.67"
   },

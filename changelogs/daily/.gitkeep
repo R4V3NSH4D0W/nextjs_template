@@ -1,0 +1,2 @@
+# This file ensures the daily directory exists for GitHub Actions
+# Daily changelog files are auto-generated and ignored by git
