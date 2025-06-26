@@ -51,21 +51,21 @@ while IFS='|' read -r hash author date message; do
         DESC=$(echo "$message" | sed 's/^feat[^:]*: *//')
         echo "✨ FEATURE: $message"
         echo "   👤 Author: $author | 🔗 Commit: $hash"
-        FILE_ENTRY="- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        FILE_ENTRY="- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*"
         echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((FEAT_COUNT++))
     elif [[ "$message" == fix:* || "$message" == fix\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^fix[^:]*: *//')
         echo "🐛 BUGFIX: $message"
         echo "   👤 Author: $author | 🔗 Commit: $hash"
-        FILE_ENTRY="- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        FILE_ENTRY="- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*"
         echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((FIX_COUNT++))
     else
         DESC=$(echo "$message" | sed 's/^[^:]*: *//')
         echo "🔧 OTHER: $message"
         echo "   👤 Author: $author | 🔗 Commit: $hash"
-        FILE_ENTRY="- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        FILE_ENTRY="- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*"
         echo "$FILE_ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
         ((OTHER_COUNT++))
     fi
