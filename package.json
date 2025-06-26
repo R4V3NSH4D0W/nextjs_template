@@ -35,9 +35,7 @@
     "prepare": "husky",
     "pre-commit": "lint-staged",
     "clean": "./scripts/clean.sh",
-    "clean:windows": "powershell -ExecutionPolicy Bypass -File ./scripts/clean.ps1",
-    "daily-report": "./scripts/daily-changelog.sh",
-    "daily-report:windows": "powershell -ExecutionPolicy Bypass -File ./scripts/daily-changelog.ps1"
+    "daily-report": "./scripts/daily-changelog.sh"
   },
   "dependencies": {
     "clsx": "^2.1.1",
