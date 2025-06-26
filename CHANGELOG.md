@@ -17,10 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **add comprehensive automation summary documentation** ([5e1af59](../../commit/5e1af59)) - _R4V3NSH4D0W_ on 2025-06-26
+- **remove unwanted duplicate scripts and fix package.json** ([ed4a0a2](../../commit/ed4a0a2)) - _R4V3NSH4D0W_ on 2025-06-26
 
 ### Fixed
 
-- **remove deprecated husky shebang from commit-msg hook** ([62c57f1](../../commit/62c57f1)) - _R4V3NSH4D0W_ on 2025-06-26
 - **preserve all GitHub workflows and clean changelog properly** ([5728d06](../../commit/5728d06)) - _R4V3NSH4D0W_ on 2025-06-26
 - **preserve all GitHub files including templates during cleanup** ([b185d42](../../commit/b185d42)) - _R4V3NSH4D0W_ on 2025-06-26
 
