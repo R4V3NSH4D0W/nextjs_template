@@ -15,13 +15,12 @@ Daily reports are automatically generated via GitHub Actions, but you can also r
 npm run daily-report
 ```
 
-
 ## Today's Reports
 
 - [📊 Today's Aggregate Report](./daily/2025-06-26.md)
 - 👥 **Individual Reports:**
-  - [R4V3NSH4D0W](./daily/contributors/2025-06-26-r4v3nsh4d0w.md)
   - [lenish magar](./daily/contributors/2025-06-26-lenish_magar.md)
+  - [R4V3NSH4D0W](./daily/contributors/2025-06-26-r4v3nsh4d0w.md)
   - [GitHub Action](./daily/contributors/2025-06-26-github_action.md)
   - [Test User](./daily/contributors/2025-06-26-test_user.md)
 
