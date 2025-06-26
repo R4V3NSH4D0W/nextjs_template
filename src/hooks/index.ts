@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
 
+// Export all custom hooks
+export {
+  useShortcuts,
+  useDataCleaner as useDataCleanerNew,
+} from './useShortcuts';
+
 /**
  * Custom hook for managing local storage state
  */
@@ -115,4 +121,104 @@ export function useAsync<T>(asyncFunction: () => Promise<T>) {
   }, [asyncFunction]);
 
   return { data, loading, error };
+}
+
+/**
+ * Custom hook for template and data cleaning
+ * Provides shortcuts for common data cleaning operations
+ */
+export function useDataCleaner() {
+  const cleanData = <T extends Record<string, unknown>>(
+    data: T,
+    options: {
+      removeEmpty?: boolean;
+      removeNull?: boolean;
+      removeExamples?: boolean;
+      keepOnly?: string[];
+    } = {}
+  ) => {
+    const {
+      removeEmpty = false,
+      removeNull = false,
+      removeExamples = false,
+      keepOnly,
+    } = options;
+    const cleaned: Partial<T> = {};
+
+    for (const [key, value] of Object.entries(data)) {
+      // Skip if keepOnly is specified and key is not in it
+      if (keepOnly && !keepOnly.includes(key)) continue;
+
+      // Skip example fields
+      if (removeExamples && /^(example|demo|test|sample)/i.test(key)) continue;
+
+      // Skip empty/null values
+      if (
+        removeEmpty &&
+        (value === '' || (Array.isArray(value) && value.length === 0))
+      )
+        continue;
+      if (removeNull && (value === null || value === undefined)) continue;
+
+      cleaned[key as keyof T] = value as T[keyof T];
+    }
+
+    return cleaned;
+  };
+
+  const createBlankTemplate = <T>(data: T): T => {
+    if (typeof data !== 'object' || data === null) return data;
+
+    return cleanData(data as Record<string, unknown>, {
+      removeEmpty: true,
+      removeNull: true,
+      removeExamples: true,
+    }) as T;
+  };
+
+  const clearStorage = (
+    options: { includeSession?: boolean; excludeKeys?: string[] } = {}
+  ) => {
+    const { includeSession = false, excludeKeys = [] } = options;
+
+    if (typeof window === 'undefined') return;
+
+    // Clear localStorage
+    const localKeys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && !excludeKeys.includes(key)) {
+        localKeys.push(key);
+      }
+    }
+    localKeys.forEach(key => localStorage.removeItem(key));
+
+    // Clear sessionStorage if requested
+    if (includeSession) {
+      const sessionKeys: string[] = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && !excludeKeys.includes(key)) {
+          sessionKeys.push(key);
+        }
+      }
+      sessionKeys.forEach(key => sessionStorage.removeItem(key));
+    }
+  };
+
+  return {
+    cleanData,
+    createBlankTemplate,
+    clearStorage,
+    // Shortcuts
+    shortcuts: {
+      blank: createBlankTemplate,
+      clean: (data: Record<string, unknown>) =>
+        cleanData(data, { removeEmpty: true, removeNull: true }),
+      noExamples: (data: Record<string, unknown>) =>
+        cleanData(data, { removeExamples: true }),
+      clearAll: () => clearStorage({ includeSession: true }),
+      clearLocal: () => clearStorage({ includeSession: false }),
+    },
+  };
 }

@@ -114,6 +114,40 @@ NEXTAUTH_SECRET=your-secret
 
 ## Utilities
 
+### Data Cleaning Shortcuts
+
+Inspired by Expo's template system, this template includes powerful data cleaning utilities:
+
+```typescript
+import shortcuts from '@/lib/shortcuts';
+import { useShortcuts } from '@/hooks/useShortcuts';
+
+// Create templates like Expo CLI
+const blankData = shortcuts.quick.blank(data); // Like: expo init --template blank
+const minimalData = shortcuts.quick.minimal(data); // Like: expo init --template minimal
+const prodData = shortcuts.quick.prod(data); // Production-ready
+
+// Field operations
+const noExamples = shortcuts.fields.noExamples(data);
+const apiReady = shortcuts.workflows.apiReady(data);
+
+// Storage management
+shortcuts.storage.reset(); // Clear localStorage + cookies
+shortcuts.storage.nuke(); // Clear everything
+
+// React hook usage
+function MyComponent() {
+  const { clean, blank, minimal } = useShortcuts();
+
+  const handleClean = () => {
+    const cleaned = clean(data, { type: 'blank' });
+    console.log(cleaned);
+  };
+}
+```
+
+See [`docs/SHORTCUTS.md`](./docs/SHORTCUTS.md) for comprehensive documentation and examples.
+
 ### Custom Hooks
 
 - `useLocalStorage` - Manage localStorage state
