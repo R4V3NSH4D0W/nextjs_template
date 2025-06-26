@@ -172,11 +172,33 @@ npm run clean
 
 ## 🚀 Getting Started
 
-1. **Make commits** using conventional commit format
-2. **Push to main branch** - daily reports auto-generate
-3. **View reports** in `changelogs/daily/` directory
-4. **Team standups** - share individual daily reports
-5. **Track progress** - build up historical activity data
+1. **Set up authentication** (see [Authentication Setup](./AUTHENTICATION_SETUP.md))
+2. **Make commits** using conventional commit format
+3. **Push to main branch** - daily reports auto-generate
+4. **View reports** in `changelogs/daily/` directory
+5. **Team standups** - share individual daily reports
+6. **Track progress** - build up historical activity data
+
+## 🔐 Authentication Setup
+
+For the automated daily changelog system to work, you need to set up proper GitHub Actions authentication. The workflow needs permission to push generated changelogs back to the repository.
+
+**Quick Setup:**
+
+1. Create a Personal Access Token (PAT) with `repo` and `workflow` scopes
+2. Add it as a repository secret named `PAT_TOKEN`
+3. Or enable write permissions for the default `GITHUB_TOKEN`
+
+**Detailed Instructions:** See [AUTHENTICATION_SETUP.md](./AUTHENTICATION_SETUP.md) for complete setup guide.
+
+**Common Error:**
+
+```
+remote: Permission to R4V3NSH4D0W/nextjs_template.git denied to github-actions[bot].
+fatal: unable to access 'https://github.com/...': The requested URL returned error: 403
+```
+
+This indicates authentication needs to be configured properly.
 
 The system is fully automated and requires no maintenance once set up!
 
