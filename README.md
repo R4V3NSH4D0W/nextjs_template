@@ -75,7 +75,45 @@ For automated changelog generation, see [Authentication Setup Guide](./AUTHENTIC
 
 > **Note:** The `daily-report` command automatically creates the `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories.
 
-## 🔐 Automated Changelog Setup
+## �️ Cross-Platform Support
+
+This template provides **robust cross-platform compatibility** for Windows, macOS, and Linux:
+
+### 🔄 **Automatic Platform Detection**
+
+Scripts automatically detect your platform and run the appropriate version:
+
+```bash
+npm run clean        # Works on any platform
+npm run daily-report # Works on any platform
+```
+
+### 📋 **Platform-Specific Commands**
+
+If you need to run platform-specific versions:
+
+```bash
+# Unix/macOS/Linux
+npm run clean:unix
+npm run daily-report:unix
+
+# Windows PowerShell
+npm run clean:windows
+npm run daily-report:windows
+```
+
+### 🛠️ **Script Technologies**
+
+- **Unix Systems**: Bash scripts (`.sh`) using standard Unix tools
+- **Windows**: PowerShell scripts (`.ps1`) with proper UTF-8 support
+- **Cross-platform**: Node.js detection with automatic script selection
+
+### 📖 **Detailed Guide**
+
+For Windows setup, troubleshooting, and advanced usage, see:
+**[Windows Compatibility Guide](./WINDOWS_COMPATIBILITY.md)**
+
+## �🔐 Automated Changelog Setup
 
 This template includes a sophisticated daily changelog system:
 
@@ -222,6 +260,7 @@ npm start
 
 - **[Daily Changelog System](./DAILY_CHANGELOG_SYSTEM.md)** - Complete automation guide
 - **[Authentication Setup](./AUTHENTICATION_SETUP.md)** - GitHub Actions configuration
+- **[Windows Compatibility](./WINDOWS_COMPATIBILITY.md)** - Cross-platform setup and troubleshooting
 - **[Contributing Guidelines](./CONTRIBUTING.md)** - Development guidelines
 
 ## 🛠️ Technology Stack

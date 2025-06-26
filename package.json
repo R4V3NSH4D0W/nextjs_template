@@ -35,8 +35,12 @@
     "type-check": "tsc --noEmit",
     "prepare": "husky",
     "pre-commit": "lint-staged",
-    "clean": "./scripts/clean.sh",
-    "daily-report": "./scripts/daily-changelog.sh"
+    "clean": "node -e \"process.platform === 'win32' ? require('child_process').spawn('pwsh', ['-File', './scripts/clean.ps1'], {stdio: 'inherit'}) : require('child_process').spawn('bash', ['./scripts/clean.sh'], {stdio: 'inherit'})\"",
+    "clean:unix": "./scripts/clean.sh",
+    "clean:windows": "pwsh -File ./scripts/clean.ps1",
+    "daily-report": "node -e \"process.platform === 'win32' ? require('child_process').spawn('pwsh', ['-File', './scripts/daily-changelog.ps1'], {stdio: 'inherit'}) : require('child_process').spawn('bash', ['./scripts/daily-changelog.sh'], {stdio: 'inherit'})\"",
+    "daily-report:unix": "./scripts/daily-changelog.sh",
+    "daily-report:windows": "pwsh -File ./scripts/daily-changelog.ps1"
   },
   "dependencies": {
     "clsx": "^2.1.1",
