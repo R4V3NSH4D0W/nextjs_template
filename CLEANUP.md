@@ -23,6 +23,13 @@ This Next.js template includes a cleanup script to help you quickly prepare it f
 - `package.json` - Reset name, version, description, and author fields
 - `public/` - Remove template-specific assets (keeps Next.js essentials)
 
+### Changelog Automation Preserved
+
+- ✅ `scripts/update-changelog.sh` - Working changelog automation
+- ✅ `.github/workflows/changelog.yml` - Auto-update workflow
+- ✅ `npm run changelog` - Package script
+- ❌ `CHANGELOG.md` - Template history removed (fresh start)
+
 ### Optional
 
 - Git history can be reset to start fresh

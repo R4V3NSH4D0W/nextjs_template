@@ -1,0 +1,75 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.2.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Is this a pre-release?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Create Release
+        run: |
+          chmod +x ./scripts/changelog.sh
+          ./scripts/changelog.sh release ${{ github.event.inputs.version }}
+
+      - name: Update package.json version
+        run: |
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+
+      - name: Commit changes
+        run: |
+          git add CHANGELOG.md package.json
+          git commit -m "chore: release v${{ github.event.inputs.version }}"
+          git push
+
+      - name: Create Git Tag
+        run: |
+          git tag v${{ github.event.inputs.version }}
+          git push origin v${{ github.event.inputs.version }}
+
+      - name: Extract release notes
+        id: extract_notes
+        run: |
+          # Extract the release notes from CHANGELOG.md
+          awk '/^## \[${{ github.event.inputs.version }}\]/{flag=1;next}/^## \[/{flag=0}flag' CHANGELOG.md > release_notes.md
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          cat release_notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          release_name: Release v${{ github.event.inputs.version }}
+          body: ${{ steps.extract_notes.outputs.notes }}
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease }}

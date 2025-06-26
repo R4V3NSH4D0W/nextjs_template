@@ -9,62 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial Next.js template setup
-- TypeScript configuration with strict mode
-- ESLint and Prettier integration
-- Husky git hooks for code quality
-- Commitlint for conventional commits
-- Zod for runtime type validation
-- Custom React hooks (useLocalStorage, useDebounce, etc.)
-- Utility functions and validation schemas
-- GitHub templates for issues and PRs
-- Comprehensive documentation
+- **initial Next.js template setup with comprehensive tooling** ([f21ed4c](../../commit/f21ed4c)) - _R4V3NSH4D0W_ on 2025-06-26
+- **create modern and attractive welcome page** ([e744e7e](../../commit/e744e7e)) - _R4V3NSH4D0W_ on 2025-06-26
+- **add template cleanup script** ([de05845](../../commit/de05845)) - _R4V3NSH4D0W_ on 2025-06-26
+- **add automated changelog system** ([fa1bd2d](../../commit/fa1bd2d)) - _R4V3NSH4D0W_ on 2025-06-26
+- **add daily reporting functionality for commit tracking** ([d98ebf7](../../commit/d98ebf7)) - _R4V3NSH4D0W_ on 2025-06-26
 
-### Changed
+### Fixed
+
+- **remove deprecated husky shebang from commit-msg hook** ([62c57f1](../../commit/62c57f1)) - _R4V3NSH4D0W_ on 2025-06-26
 
 ### Deprecated
 
 ### Removed
 
-### Fixed
-
 ### Security
-
-## [1.0.0] - 2025-06-26
-
-### Added
-
-- Initial release of Next.js template
-- Complete development environment setup
-- Production-ready configuration
-- Developer tooling and automation
-
----
-
-## Template for new releases:
-
-## [X.Y.Z] - YYYY-MM-DD
-
-### Added
-
-- New features and functionality
-
-### Changed
-
-- Changes in existing functionality
-
-### Deprecated
-
-- Soon-to-be removed features
-
-### Removed
-
-- Removed features
-
-### Fixed
-
-- Bug fixes
-
-### Security
-
-- Security improvements
