@@ -41,3 +41,20 @@ next-env.d.ts
 # Logs
 logs
 *.log
+
+# Package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Git
+.git/
+
+# Generated changelog files (auto-generated)
+changelogs/daily/
+CHANGELOG.md
+
+# Scripts (shell/batch files) - binary/executable files
+*.sh
+*.bat
+*.ps1
