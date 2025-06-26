@@ -16,6 +16,8 @@ npm run changelog
 ./scripts/update-changelog.sh
 ```
 
+> **✨ First Time Setup:** Running `npm run daily-report` automatically creates the complete `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories (`daily/` and `daily/contributors/`).
+
 ## 📝 How It Works
 
 ### Conventional Commits Support

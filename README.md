@@ -73,6 +73,8 @@ For automated changelog generation, see [Authentication Setup Guide](./AUTHENTIC
 | `npm run daily-report` | Generate daily changelog reports        |
 | `npm run clean`        | Clean up template-specific files        |
 
+> **Note:** The `daily-report` command automatically creates the `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories.
+
 ## 🔐 Automated Changelog Setup
 
 This template includes a sophisticated daily changelog system:

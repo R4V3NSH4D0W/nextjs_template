@@ -33,10 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 EOF
 
-# Clean user-specific changelogs (template artifacts)
-if [[ -d "changelogs" ]]; then
-    rm -rf changelogs
-    echo "✅ Cleaned user-specific changelogs (automation preserved)"
+# Clean only user-specific changelog files (preserve automation structure)
+if [[ -d "changelogs/daily" ]]; then
+    # Remove specific daily changelog files but keep the structure
+    find changelogs/daily -name "*.md" -type f -delete 2>/dev/null || true
+    find changelogs/daily/contributors -name "*.md" -type f -delete 2>/dev/null || true
+    echo "✅ Cleaned user-specific daily changelog files (structure preserved)"
 fi
 echo "✅ Reset main changelog (automation preserved)"
 
@@ -123,6 +125,14 @@ cat > README.md << 'EOF'
 
 A modern Next.js application built with TypeScript and Tailwind CSS.
 
+## Features
+
+- 🚀 **Next.js 14** with App Router
+- 🎨 **Tailwind CSS** for styling
+- 📝 **TypeScript** for type safety
+- 📊 **Automated Daily Changelog** system
+- 🧹 **Clean setup** scripts
+
 ## Getting Started
 
 First, install dependencies:
@@ -147,6 +157,23 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Daily Changelog System
+
+This template includes an automated daily changelog system that tracks your development progress:
+
+- **Automatic generation**: Run `npm run daily-report` to generate today's changelog
+- **GitHub Actions**: Automatically generates daily reports (requires PAT_TOKEN setup)
+- **Contributor tracking**: Tracks contributions by author
+- **Smart categorization**: Automatically categorizes commits (feat, fix, other)
+
+### Generate Daily Report
+
+```bash
+npm run daily-report
+```
+
+The system will create structured changelog files in the `changelogs/` directory.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -164,7 +191,7 @@ const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 pkg.name = 'my-nextjs-app';
 pkg.version = '0.1.0';
-pkg.description = '';
+pkg.description = 'A modern Next.js application with automated daily changelog system';
 pkg.author = '';
 delete pkg.scripts.clean;
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
@@ -179,8 +206,10 @@ echo "1. Update package.json name, description, and author"
 echo "2. Run: npm install"
 echo "3. Run: npm run dev"
 echo "4. Start building your awesome project!"
+echo "5. Generate your first daily report: npm run daily-report"
 echo
-echo "📝 Note: Template-specific files have been removed. Daily changelog automation has been preserved."
+echo "📝 Note: Template-specific files have been removed."
+echo "🚀 Daily changelog automation system has been preserved and is ready to use!"
 
 # Optional: Reset git history
 read -p "Do you want to reset git history? (y/N): " -n 1 -r

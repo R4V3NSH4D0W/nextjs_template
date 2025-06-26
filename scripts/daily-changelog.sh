@@ -7,8 +7,41 @@ echo "📊 Daily Changelog Generator - $(date +"%Y-%m-%d")"
 echo "=================================================="
 echo ""
 
-# Create directories
+# Create directories and initialize if needed
 mkdir -p changelogs/daily/contributors
+
+# Create changelogs README if it doesn't exist
+if [[ ! -f "changelogs/README.md" ]]; then
+    cat > changelogs/README.md << 'EOF'
+# Daily Changelogs
+
+This directory contains automatically generated daily development reports.
+
+## Structure
+
+- `daily/` - Daily changelog reports organized by date
+- `daily/contributors/` - Individual contributor reports organized by date and author
+
+## Usage
+
+Generate today's changelog:
+
+```bash
+npm run daily-report
+```
+
+## Automation
+
+This system automatically:
+- Categorizes commits (feat, fix, other)
+- Tracks contributor activity
+- Generates structured reports
+- Maintains historical records
+
+Reports are generated automatically via GitHub Actions or can be run manually.
+EOF
+    echo "📁 Created changelogs/README.md"
+fi
 
 # Get today's date and commits
 TODAY=$(date +"%Y-%m-%d")
