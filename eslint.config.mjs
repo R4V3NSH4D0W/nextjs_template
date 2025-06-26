@@ -25,6 +25,9 @@ const eslintConfig = [
       'no-var': 'error',
     },
   }),
+  {
+    ignores: ['scripts/**/*'],
+  },
 ];
 
 export default eslintConfig;
