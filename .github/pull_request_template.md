@@ -32,11 +32,11 @@ Closes #[issue_number]
 - [ ] Cross-browser testing (if applicable)
 - [ ] Mobile testing (if applicable)
 
-**Test Instructions:**
+<!-- **Test Instructions:**
 
 1. Step one
 2. Step two
-3. Step three
+3. Step three -->
 
 ## 📸 Screenshots
 
