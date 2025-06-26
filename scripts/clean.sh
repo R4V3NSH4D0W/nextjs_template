@@ -6,12 +6,7 @@ echo
 # Remove template-specific files
 echo "📁 Removing template files..."
 rm -f CONTRIBUTING.md EXAMPLE_PR.md LICENSE
-
-# Remove template GitHub files but preserve automation workflows
-echo "🔧 Cleaning GitHub templates..."
-rm -rf .github/ISSUE_TEMPLATE
-rm -f .github/pull_request_template.md
-echo "✅ Removed template GitHub files (all workflows preserved)"
+echo "✅ Removed template documentation files (GitHub files preserved)"
 
 # Reset CHANGELOG.md to fresh state (preserving automation)
 echo "📝 Resetting changelog..."
