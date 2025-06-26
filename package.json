@@ -13,7 +13,8 @@
     "type-check": "tsc --noEmit",
     "prepare": "husky",
     "pre-commit": "lint-staged",
-    "clean": "./scripts/clean.sh"
+    "clean": "./scripts/clean.sh",
+    "changelog": "./scripts/update-changelog.sh"
   },
   "dependencies": {
     "clsx": "^2.1.1",
