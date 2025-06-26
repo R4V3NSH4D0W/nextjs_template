@@ -15,6 +15,7 @@ Daily reports are automatically generated via GitHub Actions, but you can also r
 npm run daily-report
 ```
 
+
 ## Today's Reports
 
 - [📊 Today's Aggregate Report](./daily/2025-06-26.md)
