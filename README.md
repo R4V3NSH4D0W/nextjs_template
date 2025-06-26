@@ -160,7 +160,7 @@ chore: update dependencies
 - `refactor:` ♻️ Code refactoring
 - `chore:` 🔧 Maintenance tasks
 
-## � Continuous Integration
+## 🔄 Continuous Integration
 
 ### Multi-Node.js Testing
 
@@ -173,10 +173,19 @@ The CI pipeline tests across multiple Node.js versions:
 ### CI Pipeline Features
 
 - ✅ **Cross-platform testing** (Ubuntu-based)
-- ✅ **Separate formatting validation** to avoid version conflicts
-- ✅ **Enhanced error reporting** with helpful debug information
+- ✅ **Code linting** with ESLint across all Node.js versions
+- ✅ **TypeScript validation** ensuring type safety
+- ✅ **Build verification** to catch build-time issues
 - ✅ **Optimized caching** for faster builds
-- ✅ **Robust formatting checks** that work consistently
+
+### Why No Formatting Checks in CI?
+
+**Smart Approach**: Since Husky pre-commit hooks automatically format code before commits, there's no need to check formatting in CI. This:
+
+- ✅ **Eliminates Node.js version conflicts** with Prettier
+- ✅ **Speeds up CI builds** by removing redundant checks
+- ✅ **Prevents false failures** from version-specific formatting differences
+- ✅ **Ensures consistency** - code is always formatted before it reaches CI
 
 ### Formatting Scripts
 
@@ -184,7 +193,6 @@ The CI pipeline tests across multiple Node.js versions:
 | ---------------------- | ------------------------------ |
 | `npm run format`       | Fix formatting issues          |
 | `npm run format:check` | Check formatting (development) |
-| `npm run format:ci`    | Strict formatting check (CI)   |
 | `npm run format:fix`   | Format and stage changes       |
 
 ## �🚀 Deployment
