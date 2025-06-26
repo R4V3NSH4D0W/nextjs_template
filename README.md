@@ -88,6 +88,8 @@ Or run the batch files directly:
 - `scripts\clean.ps1` - PowerShell version (recommended)
 - `scripts\daily-changelog.ps1` - PowerShell changelog generator
 
+> **💡 GitHub Actions Compatibility:** GitHub Actions runs on Linux and uses the bash scripts automatically, so the automation works perfectly regardless of whether you develop on Windows, macOS, or Linux!
+
 > **Note:** The `daily-report` command automatically creates the `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories.
 
 ## 🔐 Automated Changelog Setup
