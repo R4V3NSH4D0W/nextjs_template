@@ -6,9 +6,9 @@ All changes made by R4V3NSH4D0W are documented in this file.
 
 ### Added
 
-- **add template cleanup script** ([de05845](../../commit/de05845)) - _R4V3NSH4D0W_ on 2025-06-26
 - **add automated changelog system** ([fa1bd2d](../../commit/fa1bd2d)) - _R4V3NSH4D0W_ on 2025-06-26
 - **add daily reporting functionality for commit tracking** ([d98ebf7](../../commit/d98ebf7)) - _R4V3NSH4D0W_ on 2025-06-26
+- **add user-based changelog separation and auto-pipeline** ([6269858](../../commit/6269858)) - _R4V3NSH4D0W_ on 2025-06-26
 
 ### Changed
 

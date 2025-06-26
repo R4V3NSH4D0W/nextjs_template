@@ -26,29 +26,50 @@ The system automatically categorizes commits based on their type:
 - `fix:` → **Fixed** section
 - `docs:`, `style:`, `refactor:`, `chore:` → **Changed** section
 
-### Example Commits
+### User-Based Changelog Separation
 
-```bash
-git commit -m "feat: add user authentication"
-git commit -m "fix: resolve login timeout issue"
-git commit -m "docs: update installation guide"
+To prevent merge conflicts in teams, the system creates separate changelog files:
+
+- **Individual changelogs**: `changelogs/CHANGELOG-{username}.md` for each contributor
+- **Main aggregated changelog**: Root `CHANGELOG.md` with all changes combined
+- **Daily reports**: `changelogs/daily/{date}.md` for daily activity summaries
+- **Per-contributor daily reports**: `changelogs/daily/contributors/{date}-{username}.md`
+
+### Daily Reports
+
+Daily reports are automatically generated and provide:
+
+- **Aggregate daily summaries** showing all commits for a specific day
+- **Per-contributor daily reports** showing individual activity
+- **Statistics and categorization** of commit types
+- **Automatic file generation** that doesn't interfere with builds
+
+Daily report files are:
+
+- ✅ **Generated automatically** via `npm run daily-report`
+- ✅ **Excluded from builds** for better performance
+- ✅ **Separated by contributor** to avoid conflicts
+- ✅ **Timestamped and dated** for historical tracking
+
+## 📁 File Structure
+
+```
+changelogs/
+├── README.md                           # Index of all contributors
+├── CHANGELOG-{username}.md             # Individual contributor changelogs
+└── daily/                              # Daily reports (excluded from builds)
+    ├── {YYYY-MM-DD}.md                # Aggregate daily reports
+    └── contributors/                   # Per-contributor daily reports
+        └── {YYYY-MM-DD}-{username}.md # Individual daily activity
 ```
 
-### Generated Output
+### Build Optimization
 
-```markdown
-### Added
+Daily reports are automatically excluded from builds via:
 
-- add user authentication ([a1b2c3d](../../commit/a1b2c3d))
-
-### Fixed
-
-- resolve login timeout issue ([e4f5g6h](../../commit/e4f5g6h))
-
-### Changed
-
-- update installation guide ([i7j8k9l](../../commit/i7j8k9l))
-```
+- **`.gitignore`**: `changelogs/daily/` directory ignored
+- **Next.js config**: Webpack watch options exclude changelog files
+- **Performance**: Daily reports don't slow down development or production builds
 
 ## 📊 Daily Reporting
 
