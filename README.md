@@ -73,6 +73,21 @@ For automated changelog generation, see [Authentication Setup Guide](./AUTHENTIC
 | `npm run daily-report` | Generate daily changelog reports        |
 | `npm run clean`        | Clean up template-specific files        |
 
+### 🪟 Windows Users
+
+For Windows compatibility, use these alternative commands:
+
+| Command                        | Description                           |
+| ------------------------------ | ------------------------------------- |
+| `npm run clean:windows`        | Clean template (PowerShell version)   |
+| `npm run daily-report:windows` | Generate reports (PowerShell version) |
+
+Or run the batch files directly:
+
+- `scripts\clean.bat` - Simple batch file version
+- `scripts\clean.ps1` - PowerShell version (recommended)
+- `scripts\daily-changelog.ps1` - PowerShell changelog generator
+
 > **Note:** The `daily-report` command automatically creates the `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories.
 
 ## 🔐 Automated Changelog Setup

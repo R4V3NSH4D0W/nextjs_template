@@ -8,13 +8,28 @@ This template includes an automated daily changelog generation system that creat
 # Generate daily reports for all contributors
 npm run daily-report
 
-# Generate daily changelogs (same as daily-report but different format)
-npm run changelog
+# Windows users (PowerShell/Command Prompt)
+npm run daily-report:windows
 
 # Or run directly
-./scripts/daily-report.sh
-./scripts/update-changelog.sh
+./scripts/daily-changelog.sh           # Unix/macOS/Linux
+./scripts/daily-changelog.ps1          # Windows PowerShell
+scripts\daily-changelog.bat            # Windows Command Prompt
 ```
+
+### 🪟 Windows Compatibility
+
+This template provides full Windows support with multiple options:
+
+- **PowerShell scripts** (`.ps1`) - Recommended for Windows 10/11
+- **Batch files** (`.bat`) - Compatible with all Windows versions
+- **NPM scripts** - Cross-platform npm commands
+
+| Platform               | Command                        | Script File                   |
+| ---------------------- | ------------------------------ | ----------------------------- |
+| Unix/macOS/Linux       | `npm run daily-report`         | `scripts/daily-changelog.sh`  |
+| Windows PowerShell     | `npm run daily-report:windows` | `scripts/daily-changelog.ps1` |
+| Windows Command Prompt | Direct execution               | `scripts\daily-changelog.bat` |
 
 > **✨ First Time Setup:** Running `npm run daily-report` automatically creates the complete `changelogs/` directory structure if it doesn't exist, including the README.md file and all required subdirectories (`daily/` and `daily/contributors/`).
 
