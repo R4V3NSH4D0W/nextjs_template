@@ -53,6 +53,33 @@ fi
 NEW_UNRELEASED="${NEW_UNRELEASED}### Deprecated"$'\n\n''### Removed'$'\n\n''### Security'$'\n'
 
 if [[ -n "$ADDED_SECTION" || -n "$CHANGED_SECTION" || -n "$FIXED_SECTION" ]]; then
+    # Create CHANGELOG.md if it doesn't exist
+    if [[ ! -f "CHANGELOG.md" ]]; then
+        echo "📝 Creating CHANGELOG.md..."
+        cat > CHANGELOG.md << 'EOF'
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+EOF
+    fi
+    
     # Update CHANGELOG.md by replacing content after [Unreleased] until next version
     if [[ -f "CHANGELOG.md" ]]; then
         # Create backup

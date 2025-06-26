@@ -5,9 +5,39 @@ echo
 
 # Remove template-specific files
 echo "📁 Removing template files..."
-rm -f CONTRIBUTING.md EXAMPLE_PR.md LICENSE CHANGELOG.md
-rm -rf .github
-echo "✅ Removed template documentation files"
+rm -f CONTRIBUTING.md EXAMPLE_PR.md LICENSE
+
+# Remove template GitHub files but preserve automation workflows
+echo "🔧 Cleaning GitHub templates..."
+rm -rf .github/ISSUE_TEMPLATE
+rm -f .github/pull_request_template.md
+echo "✅ Removed template GitHub files (all workflows preserved)"
+
+# Reset CHANGELOG.md to fresh state (preserving automation)
+echo "📝 Resetting changelog..."
+cat > CHANGELOG.md << 'EOF'
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+EOF
+echo "✅ Reset changelog (automation preserved)"
 
 # Clean source files
 echo "🔧 Cleaning source files..."
