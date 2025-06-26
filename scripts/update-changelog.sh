@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Enhanced changelog automation with author and timestamp info
-echo "📝 Updating changelog from recent commits with author and date info..."
+# Enhanced changelog automation with user-based separation to avoid merge conflicts
+echo "📝 Updating changelog from recent commits with user separation..."
+
+# Create changelogs directory if it doesn't exist
+mkdir -p changelogs
 
 # Get recent commits since last tag or last 10 commits with detailed info
 LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
@@ -12,50 +15,128 @@ else
     COMMITS=$(git log --pretty=format:"%h|%an|%ad|%s" --date=short "${LAST_TAG}..HEAD")
 fi
 
-# Initialize sections
-ADDED_SECTION=""
-CHANGED_SECTION=""
-FIXED_SECTION=""
+# Create temp files for each section to avoid associative array issues
+TEMP_DIR=$(mktemp -d)
+AUTHORS_FILE="$TEMP_DIR/authors.txt"
+touch "$AUTHORS_FILE"
 
-# Process commits
+# Initialize sections
+COMBINED_ADDED=""
+COMBINED_CHANGED=""
+COMBINED_FIXED=""
+
+# Process commits and separate by author
 while IFS='|' read -r hash author date message; do
     if [[ -z "$hash" || "$message" == "Merge"* ]]; then
         continue
     fi
     
-    # Simple categorization with author and date info
+    # Normalize author name for filename (remove spaces, special chars)
+    AUTHOR_KEY=$(echo "$author" | sed 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
+    
+    # Add author to list if not already there
+    if ! grep -q "$AUTHOR_KEY|$author" "$AUTHORS_FILE"; then
+        echo "$AUTHOR_KEY|$author" >> "$AUTHORS_FILE"
+    fi
+    
+    # Create section files for this author if they don't exist
+    touch "$TEMP_DIR/${AUTHOR_KEY}_added.txt"
+    touch "$TEMP_DIR/${AUTHOR_KEY}_changed.txt"  
+    touch "$TEMP_DIR/${AUTHOR_KEY}_fixed.txt"
+    
+    # Categorize commits by author
     if [[ "$message" == feat:* || "$message" == feat\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^feat[^:]*: *//')
-        ADDED_SECTION="${ADDED_SECTION}- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"$'\n'
+        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_added.txt"
+        COMBINED_ADDED+="$ENTRY"$'\n'
     elif [[ "$message" == fix:* || "$message" == fix\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^fix[^:]*: *//')
-        FIXED_SECTION="${FIXED_SECTION}- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"$'\n'
+        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_fixed.txt"
+        COMBINED_FIXED+="$ENTRY"$'\n'
     elif [[ "$message" == docs:* || "$message" == style:* || "$message" == refactor:* || "$message" == chore:* ]]; then
         DESC=$(echo "$message" | sed 's/^[^:]*: *//')
-        CHANGED_SECTION="${CHANGED_SECTION}- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"$'\n'
+        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_changed.txt"
+        COMBINED_CHANGED+="$ENTRY"$'\n'
     fi
     
 done <<< "$COMMITS"
 
-# Build new content for unreleased section
+# Generate individual author changelog files
+while IFS='|' read -r author_key author_name; do
+    [[ -z "$author_key" ]] && continue
+    
+    changelog_file="changelogs/CHANGELOG-${author_key}.md"
+    
+    echo "📝 Generating changelog for ${author_name}..."
+    
+    # Create individual changelog
+    cat > "$changelog_file" << EOF
+# Changelog for ${author_name}
+
+All changes made by ${author_name} are documented in this file.
+
+## [Unreleased]
+
+EOF
+
+    # Add sections if they have content
+    if [[ -s "$TEMP_DIR/${author_key}_added.txt" ]]; then
+        echo "### Added" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+        cat "$TEMP_DIR/${author_key}_added.txt" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+    fi
+    
+    if [[ -s "$TEMP_DIR/${author_key}_changed.txt" ]]; then
+        echo "### Changed" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+        cat "$TEMP_DIR/${author_key}_changed.txt" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+    fi
+    
+    if [[ -s "$TEMP_DIR/${author_key}_fixed.txt" ]]; then
+        echo "### Fixed" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+        cat "$TEMP_DIR/${author_key}_fixed.txt" >> "$changelog_file"
+        echo "" >> "$changelog_file"
+    fi
+    
+    # Add empty sections
+    cat >> "$changelog_file" << EOF
+### Deprecated
+
+### Removed
+
+### Security
+EOF
+
+done < "$AUTHORS_FILE"
+
+# Now generate the main aggregated changelog
+echo "📝 Generating main aggregated changelog..."
+
+# Build new content for main unreleased section
 NEW_UNRELEASED=""
-if [[ -n "$ADDED_SECTION" ]]; then
-    NEW_UNRELEASED="${NEW_UNRELEASED}### Added"$'\n\n'"${ADDED_SECTION}"$'\n'
+if [[ -n "$COMBINED_ADDED" ]]; then
+    NEW_UNRELEASED+="### Added"$'\n\n'"${COMBINED_ADDED}"$'\n'
 fi
-if [[ -n "$CHANGED_SECTION" ]]; then
-    NEW_UNRELEASED="${NEW_UNRELEASED}### Changed"$'\n\n'"${CHANGED_SECTION}"$'\n'
+if [[ -n "$COMBINED_CHANGED" ]]; then
+    NEW_UNRELEASED+="### Changed"$'\n\n'"${COMBINED_CHANGED}"$'\n'
 fi
-if [[ -n "$FIXED_SECTION" ]]; then
-    NEW_UNRELEASED="${NEW_UNRELEASED}### Fixed"$'\n\n'"${FIXED_SECTION}"$'\n'
+if [[ -n "$COMBINED_FIXED" ]]; then
+    NEW_UNRELEASED+="### Fixed"$'\n\n'"${COMBINED_FIXED}"$'\n'
 fi
 
 # Add empty sections
-NEW_UNRELEASED="${NEW_UNRELEASED}### Deprecated"$'\n\n''### Removed'$'\n\n''### Security'$'\n'
+NEW_UNRELEASED+="### Deprecated"$'\n\n''### Removed'$'\n\n''### Security'$'\n'
 
-if [[ -n "$ADDED_SECTION" || -n "$CHANGED_SECTION" || -n "$FIXED_SECTION" ]]; then
+if [[ -n "$COMBINED_ADDED" || -n "$COMBINED_CHANGED" || -n "$COMBINED_FIXED" ]]; then
     # Create CHANGELOG.md if it doesn't exist
     if [[ ! -f "CHANGELOG.md" ]]; then
-        echo "📝 Creating CHANGELOG.md..."
+        echo "📝 Creating main CHANGELOG.md..."
         cat > CHANGELOG.md << 'EOF'
 # Changelog
 
@@ -80,12 +161,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 EOF
     fi
     
-    # Update CHANGELOG.md by replacing content after [Unreleased] until next version
+    # Update main CHANGELOG.md
     if [[ -f "CHANGELOG.md" ]]; then
         # Create backup
         cp CHANGELOG.md CHANGELOG.md.bak
         
-        # Replace the unreleased section using a simpler approach
         # Find line numbers for unreleased section
         UNRELEASED_LINE=$(grep -n "^## \[Unreleased\]" CHANGELOG.md.bak | cut -d: -f1)
         NEXT_VERSION_LINE=$(tail -n +$((UNRELEASED_LINE + 1)) CHANGELOG.md.bak | grep -n "^## \[" | head -1 | cut -d: -f1)
@@ -105,11 +185,33 @@ EOF
         fi
         
         rm CHANGELOG.md.bak
-        echo "✅ Changelog updated with new commits!"
-    else
-        echo "❌ CHANGELOG.md not found"
-        exit 1
+        echo "✅ Main changelog updated with aggregated commits!"
     fi
+    
+    # Generate changelog index
+    cat > changelogs/README.md << 'EOF'
+# Individual Changelogs
+
+This directory contains individual changelog files for each contributor to avoid merge conflicts.
+
+## Available Changelogs
+
+EOF
+    
+    while IFS='|' read -r author_key author_name; do
+        [[ -z "$author_key" ]] && continue
+        echo "- [${author_name}](./CHANGELOG-${author_key}.md)" >> changelogs/README.md
+    done < "$AUTHORS_FILE"
+    
+    echo "" >> changelogs/README.md
+    echo "The main aggregated changelog is available in the root [CHANGELOG.md](../CHANGELOG.md)" >> changelogs/README.md
+    
+    AUTHOR_COUNT=$(wc -l < "$AUTHORS_FILE")
+    echo "✅ Individual changelogs created for ${AUTHOR_COUNT} contributors!"
+    echo "✅ All changes documented with author attribution!"
 else
     echo "ℹ️ No conventional commits found to update changelog"
 fi
+
+# Clean up temp directory
+rm -rf "$TEMP_DIR"

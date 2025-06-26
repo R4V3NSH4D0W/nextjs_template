@@ -90,6 +90,8 @@ This is perfect for daily standups, team reporting, and tracking progress.
 
 ## 🔄 GitHub Actions Integration
 
+The changelog system is **fully automated** via GitHub Actions:
+
 ### Auto-Update Workflow (`.github/workflows/changelog.yml`)
 
 **Triggers:**
@@ -97,11 +99,28 @@ This is perfect for daily standups, team reporting, and tracking progress.
 - Push to main branch
 - Pull request merge
 
-**Actions:**
+**Process:**
 
-- Automatically updates changelog
-- Commits changes back to repository
-- Uses `[skip ci]` to prevent infinite loops
+1. ✅ Automatically runs on every push
+2. ✅ Analyzes all recent conventional commits
+3. ✅ Generates individual changelog files per contributor
+4. ✅ Updates main aggregated `CHANGELOG.md`
+5. ✅ Commits changes back to repository with `[skip ci]`
+
+### What Gets Auto-Generated
+
+```
+✅ changelogs/CHANGELOG-contributor.md  # Individual files per developer
+✅ changelogs/README.md                 # Index of all contributors
+✅ CHANGELOG.md                         # Main aggregated changelog
+```
+
+### Pipeline Benefits
+
+- 🚀 **Zero manual work** - changelog updates on every push
+- 🔄 **Always up-to-date** - never forget to update documentation
+- 👥 **Team-friendly** - handles multiple contributors automatically
+- 🛡️ **Conflict-free** - separate files prevent merge conflicts
 
 ### Manual Release Workflow (`.github/workflows/release.yml`)
 
@@ -196,6 +215,45 @@ Modify the link format around line 25:
 # Custom link format
 ADDED_SECTION="${ADDED_SECTION}- ${DESC} ([${HASH}](https://custom-link.com/${HASH}))"
 ```
+
+## 🔧 User-Based Changelog Separation
+
+To **avoid merge conflicts** when multiple developers work on the same project, the system generates **individual changelog files** for each contributor:
+
+### Directory Structure
+
+```
+changelogs/
+├── README.md                    # Index of all contributors
+├── CHANGELOG-john_doe.md        # John Doe's contributions
+├── CHANGELOG-jane_smith.md      # Jane Smith's contributions
+└── CHANGELOG-developer_name.md  # Each contributor gets their own file
+```
+
+### How It Works
+
+1. **Individual Files**: Each developer gets their own changelog file
+2. **No Conflicts**: Multiple developers can work simultaneously without merge conflicts
+3. **Aggregated View**: Main `CHANGELOG.md` shows all changes combined
+4. **Auto-Generated**: Created automatically on each push via GitHub Actions
+
+### Benefits
+
+- ✅ **Zero merge conflicts** on changelog files
+- ✅ **Clear attribution** - see exactly who did what
+- ✅ **Team accountability** - individual contribution tracking
+- ✅ **Easy code reviews** - review changes by specific contributors
+
+## 🤖 Automatic Generation via Pipeline
+
+The pipeline automates the entire process:
+
+1. **Code Commit**: Developer commits code with conventional commits
+2. **Changelog Update**: On push, the changelog is updated automatically
+3. **Daily Report**: Daily report is generated for all contributors
+4. **Release Notes**: When releasing, professional release notes are created
+
+This ensures that the changelog, daily reports, and release notes are always up-to-date without manual intervention.
 
 ## 🚀 Advanced Usage
 

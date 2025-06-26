@@ -37,7 +37,7 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet CHANGELOG.md; then
+          if git diff --quiet CHANGELOG.md changelogs/; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -46,6 +46,6 @@ jobs:
       - name: Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
-          git add CHANGELOG.md
-          git commit -m "docs: auto-update changelog [skip ci]"
+          git add CHANGELOG.md changelogs/
+          git commit -m "docs: auto-update changelogs [skip ci]"
           git push

@@ -9,7 +9,7 @@ rm -f CONTRIBUTING.md EXAMPLE_PR.md LICENSE
 echo "✅ Removed template documentation files (GitHub files preserved)"
 
 # Reset CHANGELOG.md to fresh state (preserving automation)
-echo "📝 Resetting changelog..."
+echo "📝 Resetting changelog and cleaning user-specific changelogs..."
 cat > CHANGELOG.md << 'EOF'
 # Changelog
 
@@ -32,7 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 EOF
-echo "✅ Reset changelog (automation preserved)"
+
+# Clean user-specific changelogs (template artifacts)
+if [[ -d "changelogs" ]]; then
+    rm -rf changelogs
+    echo "✅ Cleaned user-specific changelogs (automation preserved)"
+fi
+echo "✅ Reset main changelog (automation preserved)"
 
 # Clean source files
 echo "🔧 Cleaning source files..."
