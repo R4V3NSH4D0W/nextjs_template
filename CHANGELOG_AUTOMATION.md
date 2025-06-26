@@ -8,8 +8,12 @@ This template includes an automated changelog generation system that follows [Ke
 # Update changelog with recent commits
 npm run changelog
 
+# Generate daily commit report
+npm run daily-report
+
 # Or run directly
 ./scripts/update-changelog.sh
+./scripts/daily-report.sh
 ```
 
 ## 📝 How It Works
@@ -46,12 +50,41 @@ git commit -m "docs: update installation guide"
 - update installation guide ([i7j8k9l](../../commit/i7j8k9l))
 ```
 
+## 📊 Daily Reporting
+
+The template includes a daily reporting feature that provides a summary of commits made on the current day, categorized by type and including author information.
+
+### Daily Report Output
+
+```bash
+📊 Daily Changelog Report - 2025-01-15
+=============================================
+
+📅 Commits for 2025-01-15:
+
+✨ FEATURE: feat: add user authentication
+   👤 Author: John Doe | 🔗 Commit: a1b2c3d
+
+🐛 BUGFIX: fix: resolve login timeout issue
+   👤 Author: Jane Smith | 🔗 Commit: e4f5g6h
+
+📈 Summary for 2025-01-15:
+   Total commits: 2
+   ✨ Features: 1
+   🐛 Bug fixes: 1
+   🔧 Other: 0
+```
+
+This is perfect for daily standups, team reporting, and tracking progress.
+
 ## 🛠️ Available Scripts
 
 | Command                         | Description                                  |
 | ------------------------------- | -------------------------------------------- |
 | `npm run changelog`             | Update [Unreleased] section with new commits |
+| `npm run daily-report`          | Generate a report of today's commits         |
 | `./scripts/update-changelog.sh` | Direct script execution                      |
+| `./scripts/daily-report.sh`     | Directly generate daily report               |
 
 **Note:** Only one changelog script is included to keep things simple and avoid conflicts.
 

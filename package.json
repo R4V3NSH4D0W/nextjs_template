@@ -14,7 +14,8 @@
     "prepare": "husky",
     "pre-commit": "lint-staged",
     "clean": "./scripts/clean.sh",
-    "changelog": "./scripts/update-changelog.sh"
+    "changelog": "./scripts/update-changelog.sh",
+    "daily-report": "./scripts/daily-report.sh"
   },
   "dependencies": {
     "clsx": "^2.1.1",
