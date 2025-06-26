@@ -169,7 +169,7 @@ pkg.author = '';
 delete pkg.scripts.clean;
 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
 "
-echo "✅ Updated package.json"
+echo "✅ Updated package.json (removed clean script, preserved daily-report)"
 
 echo
 echo "🎉 Template cleanup completed!"
@@ -180,6 +180,7 @@ echo "2. Run: npm install"
 echo "3. Run: npm run dev"
 echo "4. Start building your awesome project!"
 echo
+echo "📝 Note: Template-specific files have been removed. Daily changelog automation has been preserved."
 
 # Optional: Reset git history
 read -p "Do you want to reset git history? (y/N): " -n 1 -r
@@ -195,3 +196,14 @@ fi
 
 echo
 echo "🚀 Ready to start your new project!"
+
+# Clean up the script itself
+echo "🧹 Cleaning up cleanup script..."
+SCRIPT_PATH="$0"
+SCRIPTS_DIR="$(dirname "$SCRIPT_PATH")"
+
+# Remove only this cleanup script (keep daily-changelog.sh as it's the main feature)
+rm -f "$SCRIPT_PATH"
+echo "✅ Removed clean.sh script (daily-changelog.sh preserved)"
+
+echo "🎯 Template cleanup completed! Your project is ready to go."
