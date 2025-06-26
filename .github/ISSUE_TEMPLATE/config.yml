@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/yourusername/nextjs_template/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 🚀 Next.js Documentation
+    url: https://nextjs.org/docs
+    about: Official Next.js documentation
+  - name: 💙 Next.js Discord
+    url: https://discord.gg/nextjs
+    about: Join the Next.js community on Discord
