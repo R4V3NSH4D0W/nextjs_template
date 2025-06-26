@@ -26,6 +26,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
@@ -33,9 +42,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Generate Daily Changelogs
-        run: |
-          chmod +x ./scripts/daily-changelog.sh
-          ./scripts/daily-changelog.sh
+        run: npm run daily-report
 
       - name: Check for changes
         id: changes
