@@ -1,4 +1,4 @@
-name: Auto Update Changelog
+name: Auto Generate Daily Changelogs
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     types: [closed]
 
 jobs:
-  update-changelog:
+  generate-daily-changelogs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || (github.event.pull_request.merged == true)
 
@@ -29,7 +29,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Update Changelog
+      - name: Generate Daily Changelogs
         run: |
           chmod +x ./scripts/update-changelog.sh
           ./scripts/update-changelog.sh
@@ -42,7 +42,7 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet CHANGELOG.md changelogs/; then
+          if git diff --quiet changelogs/; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -51,6 +51,6 @@ jobs:
       - name: Commit and push changes
         if: steps.changes.outputs.changed == 'true'
         run: |
-          git add CHANGELOG.md changelogs/
-          git commit -m "docs: auto-update changelogs [skip ci]"
+          git add changelogs/
+          git commit -m "docs: auto-generate daily changelogs [skip ci]"
           git push

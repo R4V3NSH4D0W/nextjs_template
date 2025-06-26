@@ -1,22 +1,28 @@
-# Individual Changelogs
+# Daily Changelogs by Contributor
 
-This directory contains individual changelog files for each contributor to avoid merge conflicts.
+This directory contains daily changelog files for each contributor organized by date.
 
-## Available Changelogs
+## How It Works
 
-- [R4V3NSH4D0W](./CHANGELOG-r4v3nsh4d0w.md)
+- **Daily aggregate reports**: `daily/{YYYY-MM-DD}.md` - All commits for a specific day
+- **Per-contributor reports**: `daily/contributors/{YYYY-MM-DD}-{username}.md` - Individual daily activity
 
-## Daily Reports
+## Generate Daily Reports
 
-Daily reports are automatically generated in the `daily/` directory:
-
-- **Aggregate reports**: `daily/{YYYY-MM-DD}.md` - All commits for a specific day
-- **Contributor reports**: `daily/contributors/{YYYY-MM-DD}-{username}.md` - Individual daily activity
-
-Generate daily reports with:
+Daily reports are automatically generated via GitHub Actions, but you can also run:
 
 ```bash
 npm run daily-report
 ```
 
-The main aggregated changelog is available in the root [CHANGELOG.md](../CHANGELOG.md)
+## Today's Reports
+
+- [📊 Today's Aggregate Report](./daily/2025-06-26.md)
+- 👥 **Individual Reports:**
+  - [R4V3NSH4D0W](./daily/contributors/2025-06-26-r4v3nsh4d0w.md)
+  - [Test User](./daily/contributors/2025-06-26-test_user.md)
+
+## Navigation
+
+- 📁 [View all daily reports](./daily/)
+- 👥 [View all contributor reports](./daily/contributors/)

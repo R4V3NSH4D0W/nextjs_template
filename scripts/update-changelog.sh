@@ -1,29 +1,35 @@
 #!/bin/bash
 
-# Enhanced changelog automation with user-based separation to avoid merge conflicts
-echo "📝 Updating changelog from recent commits with user separation..."
+# Daily changelog automation with per-contributor separation
+echo "📝 Generating daily changelogs for contributors..."
 
 # Create changelogs directory if it doesn't exist
 mkdir -p changelogs
+mkdir -p changelogs/daily
+mkdir -p changelogs/daily/contributors
 
-# Get recent commits since last tag or last 10 commits with detailed info
-LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-if [ -z "$LAST_TAG" ]; then
-    # Format: hash|author|date|message
-    COMMITS=$(git log --pretty=format:"%h|%an|%ad|%s" --date=short -10 --reverse)
-else
-    COMMITS=$(git log --pretty=format:"%h|%an|%ad|%s" --date=short "${LAST_TAG}..HEAD")
+# Get today's date
+TODAY=$(date +"%Y-%m-%d")
+
+# Get today's commits with detailed info
+TODAYS_COMMITS=$(git log --pretty=format:"%h|%an|%ad|%s" --date=short --since="$TODAY 00:00:00" --until="$TODAY 23:59:59")
+
+if [[ -z "$TODAYS_COMMITS" ]]; then
+    echo "ℹ️ No commits found for today ($TODAY)"
+    exit 0
 fi
 
-# Create temp files for each section to avoid associative array issues
+# Create temp files for contributor separation
 TEMP_DIR=$(mktemp -d)
 AUTHORS_FILE="$TEMP_DIR/authors.txt"
 touch "$AUTHORS_FILE"
 
-# Initialize sections
-COMBINED_ADDED=""
-COMBINED_CHANGED=""
-COMBINED_FIXED=""
+# Initialize counters
+FEAT_COUNT=0
+FIX_COUNT=0
+OTHER_COUNT=0
+
+echo "📅 Processing commits for $TODAY..."
 
 # Process commits and separate by author
 while IFS='|' read -r hash author date message; do
@@ -31,7 +37,7 @@ while IFS='|' read -r hash author date message; do
         continue
     fi
     
-    # Normalize author name for filename (remove spaces, special chars)
+    # Normalize author name for filename
     AUTHOR_KEY=$(echo "$author" | sed 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
     
     # Add author to list if not already there
@@ -39,179 +45,156 @@ while IFS='|' read -r hash author date message; do
         echo "$AUTHOR_KEY|$author" >> "$AUTHORS_FILE"
     fi
     
-    # Create section files for this author if they don't exist
-    touch "$TEMP_DIR/${AUTHOR_KEY}_added.txt"
-    touch "$TEMP_DIR/${AUTHOR_KEY}_changed.txt"  
-    touch "$TEMP_DIR/${AUTHOR_KEY}_fixed.txt"
+    # Create contributor files if they don't exist
+    touch "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
     
-    # Categorize commits by author
+    # Categorize and count
     if [[ "$message" == feat:* || "$message" == feat\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^feat[^:]*: *//')
-        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_added.txt"
-        COMBINED_ADDED+="$ENTRY"$'\n'
+        ENTRY="- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        ((FEAT_COUNT++))
     elif [[ "$message" == fix:* || "$message" == fix\(*\):* ]]; then
         DESC=$(echo "$message" | sed 's/^fix[^:]*: *//')
-        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_fixed.txt"
-        COMBINED_FIXED+="$ENTRY"$'\n'
-    elif [[ "$message" == docs:* || "$message" == style:* || "$message" == refactor:* || "$message" == chore:* ]]; then
+        ENTRY="- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        ((FIX_COUNT++))
+    else
         DESC=$(echo "$message" | sed 's/^[^:]*: *//')
-        ENTRY="- **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
-        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_changed.txt"
-        COMBINED_CHANGED+="$ENTRY"$'\n'
+        ENTRY="- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}* on ${date}"
+        echo "$ENTRY" >> "$TEMP_DIR/${AUTHOR_KEY}_commits.txt"
+        ((OTHER_COUNT++))
     fi
     
-done <<< "$COMMITS"
+done <<< "$TODAYS_COMMITS"
 
-# Generate individual author changelog files
+# Generate daily aggregate report
+TOTAL_COUNT=$((FEAT_COUNT + FIX_COUNT + OTHER_COUNT))
+DAILY_REPORT_FILE="changelogs/daily/${TODAY}.md"
+
+echo "� Generating daily aggregate report..."
+cat > "$DAILY_REPORT_FILE" << EOF
+# Daily Report - $TODAY
+
+## Summary
+- **Total commits:** $TOTAL_COUNT
+- **Features:** $FEAT_COUNT
+- **Bug fixes:** $FIX_COUNT  
+- **Other changes:** $OTHER_COUNT
+
+## All Commits
+
+EOF
+
+# Add all commits to daily report
+while IFS='|' read -r hash author date message; do
+    if [[ -z "$hash" || "$message" == "Merge"* ]]; then
+        continue
+    fi
+    
+    if [[ "$message" == feat:* || "$message" == feat\(*\):* ]]; then
+        DESC=$(echo "$message" | sed 's/^feat[^:]*: *//')
+        echo "- ✨ **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*" >> "$DAILY_REPORT_FILE"
+    elif [[ "$message" == fix:* || "$message" == fix\(*\):* ]]; then
+        DESC=$(echo "$message" | sed 's/^fix[^:]*: *//')
+        echo "- 🐛 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*" >> "$DAILY_REPORT_FILE"
+    else
+        DESC=$(echo "$message" | sed 's/^[^:]*: *//')
+        echo "- 🔧 **${DESC}** ([${hash}](../../commit/${hash})) - *${author}*" >> "$DAILY_REPORT_FILE"
+    fi
+done <<< "$TODAYS_COMMITS"
+
+echo "" >> "$DAILY_REPORT_FILE"
+echo "---" >> "$DAILY_REPORT_FILE"
+echo "*Generated on $(date)*" >> "$DAILY_REPORT_FILE"
+
+# Generate per-contributor daily reports
+CONTRIBUTOR_COUNT=0
 while IFS='|' read -r author_key author_name; do
     [[ -z "$author_key" ]] && continue
     
-    changelog_file="changelogs/CHANGELOG-${author_key}.md"
+    contributor_file="changelogs/daily/contributors/${TODAY}-${author_key}.md"
+    commit_count=$(wc -l < "$TEMP_DIR/${author_key}_commits.txt" 2>/dev/null || echo "0")
     
-    echo "📝 Generating changelog for ${author_name}..."
-    
-    # Create individual changelog
-    cat > "$changelog_file" << EOF
-# Changelog for ${author_name}
+    if [[ "$commit_count" -gt 0 ]]; then
+        echo "📝 Generating daily report for ${author_name}..."
+        
+        cat > "$contributor_file" << EOF
+# Daily Report for ${author_name} - $TODAY
 
-All changes made by ${author_name} are documented in this file.
+## Summary
+- **Commits today:** $commit_count
 
-## [Unreleased]
+## Commits
 
 EOF
-
-    # Add sections if they have content
-    if [[ -s "$TEMP_DIR/${author_key}_added.txt" ]]; then
-        echo "### Added" >> "$changelog_file"
-        echo "" >> "$changelog_file"
-        cat "$TEMP_DIR/${author_key}_added.txt" >> "$changelog_file"
-        echo "" >> "$changelog_file"
+        
+        # Add contributor's commits
+        while IFS= read -r commit_line; do
+            echo "$commit_line" >> "$contributor_file"
+        done < "$TEMP_DIR/${author_key}_commits.txt"
+        
+        echo "" >> "$contributor_file"
+        echo "---" >> "$contributor_file"
+        echo "*Generated on $(date)*" >> "$contributor_file"
+        
+        ((CONTRIBUTOR_COUNT++))
     fi
-    
-    if [[ -s "$TEMP_DIR/${author_key}_changed.txt" ]]; then
-        echo "### Changed" >> "$changelog_file"
-        echo "" >> "$changelog_file"
-        cat "$TEMP_DIR/${author_key}_changed.txt" >> "$changelog_file"
-        echo "" >> "$changelog_file"
-    fi
-    
-    if [[ -s "$TEMP_DIR/${author_key}_fixed.txt" ]]; then
-        echo "### Fixed" >> "$changelog_file"
-        echo "" >> "$changelog_file"
-        cat "$TEMP_DIR/${author_key}_fixed.txt" >> "$changelog_file"
-        echo "" >> "$changelog_file"
-    fi
-    
-    # Add empty sections
-    cat >> "$changelog_file" << EOF
-### Deprecated
-
-### Removed
-
-### Security
-EOF
-
 done < "$AUTHORS_FILE"
 
-# Now generate the main aggregated changelog
-echo "📝 Generating main aggregated changelog..."
+# Update main changelogs index
+cat > changelogs/README.md << 'EOF'
+# Daily Changelogs by Contributor
 
-# Build new content for main unreleased section
-NEW_UNRELEASED=""
-if [[ -n "$COMBINED_ADDED" ]]; then
-    NEW_UNRELEASED+="### Added"$'\n\n'"${COMBINED_ADDED}"$'\n'
-fi
-if [[ -n "$COMBINED_CHANGED" ]]; then
-    NEW_UNRELEASED+="### Changed"$'\n\n'"${COMBINED_CHANGED}"$'\n'
-fi
-if [[ -n "$COMBINED_FIXED" ]]; then
-    NEW_UNRELEASED+="### Fixed"$'\n\n'"${COMBINED_FIXED}"$'\n'
-fi
+This directory contains daily changelog files for each contributor organized by date.
 
-# Add empty sections
-NEW_UNRELEASED+="### Deprecated"$'\n\n''### Removed'$'\n\n''### Security'$'\n'
+## How It Works
 
-if [[ -n "$COMBINED_ADDED" || -n "$COMBINED_CHANGED" || -n "$COMBINED_FIXED" ]]; then
-    # Create CHANGELOG.md if it doesn't exist
-    if [[ ! -f "CHANGELOG.md" ]]; then
-        echo "📝 Creating main CHANGELOG.md..."
-        cat > CHANGELOG.md << 'EOF'
-# Changelog
+- **Daily aggregate reports**: `daily/{YYYY-MM-DD}.md` - All commits for a specific day
+- **Per-contributor reports**: `daily/contributors/{YYYY-MM-DD}-{username}.md` - Individual daily activity
 
-All notable changes to this project will be documented in this file.
+## Generate Daily Reports
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Daily reports are automatically generated via GitHub Actions, but you can also run:
 
-## [Unreleased]
+```bash
+npm run daily-report
+```
 
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-EOF
-    fi
-    
-    # Update main CHANGELOG.md
-    if [[ -f "CHANGELOG.md" ]]; then
-        # Create backup
-        cp CHANGELOG.md CHANGELOG.md.bak
-        
-        # Find line numbers for unreleased section
-        UNRELEASED_LINE=$(grep -n "^## \[Unreleased\]" CHANGELOG.md.bak | cut -d: -f1)
-        NEXT_VERSION_LINE=$(tail -n +$((UNRELEASED_LINE + 1)) CHANGELOG.md.bak | grep -n "^## \[" | head -1 | cut -d: -f1)
-        
-        if [[ -n "$NEXT_VERSION_LINE" ]]; then
-            NEXT_VERSION_LINE=$((UNRELEASED_LINE + NEXT_VERSION_LINE))
-            # Print everything before unreleased, then new content, then everything after next version
-            head -n "$UNRELEASED_LINE" CHANGELOG.md.bak > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            printf "%s" "$NEW_UNRELEASED" >> CHANGELOG.md
-            tail -n +$((NEXT_VERSION_LINE)) CHANGELOG.md.bak >> CHANGELOG.md
-        else
-            # No other versions, just replace everything after unreleased
-            head -n "$UNRELEASED_LINE" CHANGELOG.md.bak > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            printf "%s" "$NEW_UNRELEASED" >> CHANGELOG.md
-        fi
-        
-        rm CHANGELOG.md.bak
-        echo "✅ Main changelog updated with aggregated commits!"
-    fi
-    
-    # Generate changelog index
-    cat > changelogs/README.md << 'EOF'
-# Individual Changelogs
-
-This directory contains individual changelog files for each contributor to avoid merge conflicts.
-
-## Available Changelogs
+## Today's Reports
 
 EOF
-    
+
+# Add links to today's reports if they exist
+if [[ -f "$DAILY_REPORT_FILE" ]]; then
+    echo "- [📊 Today's Aggregate Report](./daily/${TODAY}.md)" >> changelogs/README.md
+fi
+
+if [[ $CONTRIBUTOR_COUNT -gt 0 ]]; then
+    echo "- 👥 **Individual Reports:**" >> changelogs/README.md
     while IFS='|' read -r author_key author_name; do
         [[ -z "$author_key" ]] && continue
-        echo "- [${author_name}](./CHANGELOG-${author_key}.md)" >> changelogs/README.md
+        contributor_file="changelogs/daily/contributors/${TODAY}-${author_key}.md"
+        if [[ -f "$contributor_file" ]]; then
+            echo "  - [${author_name}](./daily/contributors/${TODAY}-${author_key}.md)" >> changelogs/README.md
+        fi
     done < "$AUTHORS_FILE"
-    
-    echo "" >> changelogs/README.md
-    echo "The main aggregated changelog is available in the root [CHANGELOG.md](../CHANGELOG.md)" >> changelogs/README.md
-    
-    AUTHOR_COUNT=$(wc -l < "$AUTHORS_FILE")
-    echo "✅ Individual changelogs created for ${AUTHOR_COUNT} contributors!"
-    echo "✅ All changes documented with author attribution!"
-else
-    echo "ℹ️ No conventional commits found to update changelog"
 fi
+
+echo "" >> changelogs/README.md
+echo "## Navigation" >> changelogs/README.md
+echo "" >> changelogs/README.md
+echo "- 📁 [View all daily reports](./daily/)" >> changelogs/README.md
+echo "- 👥 [View all contributor reports](./daily/contributors/)" >> changelogs/README.md
 
 # Clean up temp directory
 rm -rf "$TEMP_DIR"
+
+if [[ $TOTAL_COUNT -gt 0 ]]; then
+    echo "✅ Daily reports generated successfully!"
+    echo "   📄 Aggregate report: $DAILY_REPORT_FILE"
+    echo "   👥 Contributor reports: $CONTRIBUTOR_COUNT files"
+    echo "   📊 Total commits processed: $TOTAL_COUNT"
+else
+    echo "ℹ️ No commits found for today ($TODAY)"
+fi
