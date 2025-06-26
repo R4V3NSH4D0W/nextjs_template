@@ -17,7 +17,9 @@ export default function HomePage() {
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl rotate-12 shadow-lg shadow-blue-500/30"></div>
                 <div className="absolute inset-0 w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl -rotate-12 shadow-lg shadow-purple-500/30"></div>
               </div>
-              <span className="font-bold text-2xl text-white">NextJS Pro</span>
+              <span className="font-bold text-2xl text-white">
+                NextJS Template
+              </span>
             </div>
             <div className="hidden md:flex space-x-8">
               <a
@@ -67,17 +69,18 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-6xl md:text-8xl font-extrabold bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent mb-8 leading-tight">
-            NextJS Pro
+            NextJS Template
             <br />
             <span className="text-4xl md:text-6xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Template
+              For Lazy Developers
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto mb-12 leading-relaxed">
             The ultimate Next.js foundation with automated changelog generation,
-            modern tooling, and exceptional developer experience. Start building
-            immediately with enterprise-grade architecture.
+            modern tooling, and exceptional developer experience. Perfect for
+            developers who feel lazy about writing daily reports! 😅 Start
+            building immediately with enterprise-grade architecture.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
@@ -337,7 +340,7 @@ vercel deploy`}
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg rotate-12"></div>
                 <div className="absolute inset-0 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg -rotate-12"></div>
               </div>
-              <span className="font-bold text-xl">NextJS Pro</span>
+              <span className="font-bold text-xl">NextJS Template</span>
             </div>
             <p className="text-slate-400 mb-6">
               Built with ❤️ for the Next.js community
