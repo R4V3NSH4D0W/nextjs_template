@@ -39,13 +39,9 @@ npm run daily-report
 **Platform-specific:**
 
 ```bash
-# Unix/macOS/Linux
-npm run daily-report:unix
-./scripts/daily-changelog.sh
-
-# Windows
-npm run daily-report:windows
-pwsh -File ./scripts/daily-changelog.ps1
+# Cross-platform TypeScript implementation
+npm run daily-report
+tsx scripts/daily-changelog.ts
 ```
 
 ## How Cross-Platform Detection Works

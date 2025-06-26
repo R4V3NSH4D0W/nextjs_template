@@ -163,8 +163,8 @@ src/
     └── daily-changelog.yml # Changelog automation
 
 scripts/
-├── clean.sh              # Cleanup utility
-└── daily-changelog.sh    # Changelog generation
+├── clean.ts              # Cleanup utility (TypeScript)
+└── daily-changelog.ts    # Changelog generation (TypeScript)
 
 changelogs/               # Generated changelog reports
 ├── daily/               # Daily aggregate reports
