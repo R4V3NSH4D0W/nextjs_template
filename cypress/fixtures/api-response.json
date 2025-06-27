@@ -1,0 +1,17 @@
+{
+  "user": {
+    "id": "user-123",
+    "email": "test@example.com",
+    "name": "Test User",
+    "avatar": "https://example.com/avatar.jpg"
+  },
+  "posts": [
+    {
+      "id": "post-1",
+      "title": "Sample Post",
+      "content": "This is a sample post for testing",
+      "author": "Test User",
+      "createdAt": "2025-06-27T00:00:00Z"
+    }
+  ]
+}

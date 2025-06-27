@@ -12,6 +12,13 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/cypress/videos/
+/cypress/screenshots/
+*.lcov
+coverage.json
+coverage/
 
 # next.js
 /.next/
