@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { Button } from '@/components/ui/button';
 
 describe('Button Component', () => {
@@ -26,10 +27,10 @@ describe('Button Component', () => {
   it('handles click events', async () => {
     const handleClick = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<Button onClick={handleClick}>Click me</Button>);
     const button = screen.getByRole('button', { name: /click me/i });
-    
+
     await user.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
@@ -53,8 +54,15 @@ describe('Button Component', () => {
   });
 
   it('renders all variant styles correctly', () => {
-    const variants = ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'] as const;
-    
+    const variants = [
+      'default',
+      'destructive',
+      'outline',
+      'secondary',
+      'ghost',
+      'link',
+    ] as const;
+
     variants.forEach(variant => {
       const { unmount } = render(<Button variant={variant}>{variant}</Button>);
       const button = screen.getByRole('button', { name: variant });
@@ -65,7 +73,7 @@ describe('Button Component', () => {
 
   it('renders all size styles correctly', () => {
     const sizes = ['default', 'sm', 'lg', 'icon'] as const;
-    
+
     sizes.forEach(size => {
       const { unmount } = render(<Button size={size}>{size}</Button>);
       const button = screen.getByRole('button', { name: size });

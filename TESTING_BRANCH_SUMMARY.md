@@ -7,12 +7,14 @@ This branch adds comprehensive frontend testing capabilities to the NextJS templ
 ## 🚀 What's Added
 
 ### Testing Tools Stack
+
 - **Playwright** - Modern E2E testing with cross-browser support
 - **Cypress** - UI testing and component testing
 - **Vitest** - Fast unit testing (replacing Jest)
 - **Newman** - API testing with Postman collections
 
 ### Test Types Covered
+
 1. **Unit Tests** - Component logic and utility functions
 2. **E2E Tests** - Full user workflows across browsers
 3. **Component Tests** - Isolated component testing
@@ -21,6 +23,7 @@ This branch adds comprehensive frontend testing capabilities to the NextJS templ
 6. **Visual Regression Tests** - UI consistency verification
 
 ### Key Features
+
 - ✅ Cross-browser testing (Chrome, Firefox, Safari, Edge)
 - ✅ Mobile responsive testing
 - ✅ Accessibility testing with axe-core
@@ -64,6 +67,7 @@ This branch adds comprehensive frontend testing capabilities to the NextJS templ
 ## 🔧 Available Commands
 
 ### Unit Testing
+
 ```bash
 npm run test:unit              # Run unit tests
 npm run test:unit:watch        # Watch mode
@@ -71,6 +75,7 @@ npm run test:unit:coverage     # With coverage
 ```
 
 ### E2E Testing (Playwright)
+
 ```bash
 npm run test:e2e               # Run E2E tests
 npm run test:e2e:ui            # Interactive mode
@@ -79,6 +84,7 @@ npm run test:e2e:debug         # Debug mode
 ```
 
 ### UI Testing (Cypress)
+
 ```bash
 npm run test:cypress           # Open Cypress UI
 npm run test:cypress:run       # Headless run
@@ -86,17 +92,20 @@ npm run test:cypress:headless  # Completely headless
 ```
 
 ### API Testing
+
 ```bash
 npm run test:api               # Run API tests
 ```
 
 ### Specialized Tests
+
 ```bash
 npm run test:visual            # Visual regression
 npm run test:accessibility     # A11y testing
 ```
 
 ### Test Runner
+
 ```bash
 npm run test-runner            # Interactive test selection
 npm run test                   # Run all tests
@@ -107,21 +116,25 @@ npm run test                   # Run all tests
 The clean script now includes testing cleanup options:
 
 When running `npm run clean`, users will be asked:
+
 - **"Do you want to keep the testing system? (Y/n)"**
 
 If they choose **No (n)**:
+
 - ✅ Removes all test files and directories
 - ✅ Removes testing dependencies from package.json
 - ✅ Removes testing scripts
 - ✅ Cleans up configuration files
 
 If they choose **Yes (Y)** (default):
+
 - ✅ Keeps all testing functionality
 - ✅ Shows guidance to check TESTING.md
 
 ## 🎨 Testing Examples
 
 ### Component Testing
+
 ```typescript
 // Unit test example
 import { render, screen } from '@testing-library/react';
@@ -134,6 +147,7 @@ test('button renders correctly', () => {
 ```
 
 ### E2E Testing
+
 ```typescript
 // Playwright E2E test
 import { test, expect } from '@playwright/test';
@@ -145,6 +159,7 @@ test('homepage loads correctly', async ({ page }) => {
 ```
 
 ### Cypress Testing
+
 ```typescript
 // Cypress UI test
 describe('Homepage', () => {
@@ -158,6 +173,7 @@ describe('Homepage', () => {
 ## 🚀 CI/CD Integration
 
 Automated testing runs on:
+
 - ✅ Push to main/develop branches
 - ✅ Pull requests
 - ✅ Multiple test suites in parallel

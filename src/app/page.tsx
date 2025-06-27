@@ -192,6 +192,7 @@ export default function HomePage() {
 cd nextjs_template
 npm install`}
                 gradient="from-blue-500 to-purple-500"
+                ariaLabel="Clone and install code example"
               />
               <SetupStep
                 step="2"
@@ -201,6 +202,7 @@ npm install`}
 # Configure environment variables
 cp .env.example .env.local`}
                 gradient="from-purple-500 to-pink-500"
+                ariaLabel="Configuration setup code example"
               />
               <SetupStep
                 step="3"
@@ -210,6 +212,7 @@ cp .env.example .env.local`}
 # or deploy to Vercel
 vercel deploy`}
                 gradient="from-pink-500 to-red-500"
+                ariaLabel="Development and deployment code example"
               />
             </div>
           </div>
@@ -422,12 +425,14 @@ function SetupStep({
   description,
   code,
   gradient,
+  ariaLabel,
 }: {
   step: string;
   title: string;
   description: string;
   code: string;
   gradient: string;
+  ariaLabel: string;
 }) {
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
@@ -439,7 +444,12 @@ function SetupStep({
       <h3 className="text-xl font-bold mb-3 text-white">{title}</h3>
       <p className="text-slate-300 mb-6">{description}</p>
       <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-        <pre className="text-sm text-slate-200 overflow-x-auto">
+        <pre
+          className="text-sm text-slate-200 overflow-x-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
+          tabIndex={0}
+          role="region"
+          aria-label={ariaLabel}
+        >
           <code>{code}</code>
         </pre>
       </div>

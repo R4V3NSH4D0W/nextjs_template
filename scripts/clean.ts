@@ -177,7 +177,7 @@ function removeTestingDependencies(): void {
       'test:cypress:headless',
       'test:api',
       'test:visual',
-      'test:accessibility'
+      'test:accessibility',
     ];
 
     testingScripts.forEach(script => {
@@ -199,7 +199,7 @@ function removeTestingDependencies(): void {
       'jsdom',
       'newman',
       'playwright-axe',
-      'vitest'
+      'vitest',
     ];
 
     testingDeps.forEach(dep => {

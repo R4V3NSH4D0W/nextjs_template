@@ -43,7 +43,7 @@ function askQuestion(question: string): Promise<string> {
 
 async function runTests(testType: string): Promise<void> {
   log(`🚀 Running ${testType} tests...`, 'blue');
-  
+
   try {
     switch (testType) {
       case 'unit':
@@ -69,7 +69,7 @@ async function runTests(testType: string): Promise<void> {
         log(`❌ Unknown test type: ${testType}`, 'red');
         return;
     }
-    
+
     log(`✅ ${testType} tests completed successfully!`, 'green');
   } catch (error) {
     log(`❌ ${testType} tests failed!`, 'red');
@@ -80,7 +80,7 @@ async function runTests(testType: string): Promise<void> {
 async function main(): Promise<void> {
   log('🧪 Test Runner', 'blue');
   console.log('');
-  
+
   log('Available test types:', 'cyan');
   log('  1. unit - Unit tests (Vitest)', 'cyan');
   log('  2. e2e - End-to-end tests (Playwright)', 'cyan');
@@ -88,9 +88,11 @@ async function main(): Promise<void> {
   log('  4. api - API tests (Newman)', 'cyan');
   log('  5. all - All tests', 'cyan');
   console.log('');
-  
-  const testType = await askQuestion('Which tests would you like to run? (1-5): ');
-  
+
+  const testType = await askQuestion(
+    'Which tests would you like to run? (1-5): '
+  );
+
   switch (testType) {
     case '1':
       await runTests('unit');

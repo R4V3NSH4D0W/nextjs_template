@@ -8,6 +8,9 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+// Disable ESLint namespace rule for Cypress global declarations
+/* eslint-disable @typescript-eslint/no-namespace */
+
 /// <reference types="cypress" />
 
 declare global {
@@ -18,13 +21,13 @@ declare global {
        * @example cy.dataCy('greeting')
        */
       dataCy(value: string): Chainable<JQuery<HTMLElement>>;
-      
+
       /**
        * Custom command to login with username and password
        * @example cy.login('user@example.com', 'password')
        */
       login(email: string, password: string): Chainable<void>;
-      
+
       /**
        * Custom command to check accessibility
        * @example cy.checkAccessibility()

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 // ***********************************************************
 // This example support/component.ts is processed and
 // loaded automatically before your component test files.
@@ -16,5 +17,20 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-// Example use:
-// cy.mount(<MyComponent />)
+// Import React and ReactDOM for mounting
+import { mount } from '@cypress/react';
+
+// Register the mount command
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      mount: typeof mount;
+    }
+  }
+}
+
+Cypress.Commands.add('mount', mount);
+
+// Note: CSS imports can cause issues in Cypress component tests
+// If you need styling, consider importing individual component styles
+// or using CSS-in-JS solutions

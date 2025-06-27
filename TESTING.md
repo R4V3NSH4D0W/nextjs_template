@@ -28,6 +28,7 @@ cypress/
 ## 🚀 Running Tests
 
 ### Unit Tests (Vitest)
+
 ```bash
 # Run unit tests
 npm run test:unit
@@ -40,6 +41,7 @@ npm run test:unit:coverage
 ```
 
 ### End-to-End Tests (Playwright)
+
 ```bash
 # Run E2E tests
 npm run test:e2e
@@ -55,6 +57,7 @@ npm run test:e2e:debug
 ```
 
 ### Cypress Tests
+
 ```bash
 # Open Cypress UI
 npm run test:cypress
@@ -67,24 +70,28 @@ npm run test:cypress:headless
 ```
 
 ### API Tests (Newman/Postman)
+
 ```bash
 # Run API tests
 npm run test:api
 ```
 
 ### Visual Regression Tests
+
 ```bash
 # Run visual regression tests
 npm run test:visual
 ```
 
 ### Accessibility Tests
+
 ```bash
 # Run accessibility tests
 npm run test:accessibility
 ```
 
 ### Run All Tests
+
 ```bash
 # Run all test suites
 npm run test
@@ -154,32 +161,38 @@ describe('Homepage', () => {
 ## 🎯 Test Categories
 
 ### 1. Unit Tests
+
 - Component logic
 - Utility functions
 - Custom hooks
 - Business logic
 
 ### 2. Integration Tests
+
 - API routes
 - Database operations
 - Third-party integrations
 
 ### 3. E2E Tests
+
 - User workflows
 - Full application features
 - Cross-browser compatibility
 
 ### 4. Visual Tests
+
 - UI regression testing
 - Screenshot comparisons
 - Layout consistency
 
 ### 5. Accessibility Tests
+
 - WCAG compliance
 - Screen reader compatibility
 - Keyboard navigation
 
 ### 6. Performance Tests
+
 - Load times
 - Bundle size
 - Core Web Vitals
@@ -194,6 +207,7 @@ describe('Homepage', () => {
 ## 📊 Coverage Reports
 
 Coverage reports are generated in the `coverage/` directory when running:
+
 ```bash
 npm run test:unit:coverage
 ```
@@ -210,6 +224,7 @@ npm run test:unit:coverage
 ## 🐛 Debugging Tests
 
 ### Playwright
+
 ```bash
 # Debug specific test
 npx playwright test tests/e2e/homepage.spec.ts --debug
@@ -219,12 +234,14 @@ npx playwright test --headed
 ```
 
 ### Cypress
+
 ```bash
 # Open Cypress UI for debugging
 npm run test:cypress
 ```
 
 ### Vitest
+
 ```bash
 # Run in watch mode with coverage
 npm run test:unit:watch
@@ -237,6 +254,7 @@ Tests are automatically run in GitHub Actions. Check `.github/workflows/` for CI
 ## 📈 Test Metrics
 
 Track these metrics for test health:
+
 - Test coverage percentage
 - Test execution time
 - Flaky test rate
