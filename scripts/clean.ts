@@ -125,6 +125,94 @@ function removeChangelogSystem(): void {
   log('✅ Daily changelog system completely removed', 'green');
 }
 
+function removeTestingFiles(): void {
+  log('🗑️  Removing testing files and configurations...', 'yellow');
+
+  // Remove test configuration files
+  removeFileIfExists('vitest.config.ts');
+  removeFileIfExists('vitest.setup.ts');
+  removeFileIfExists('playwright.config.ts');
+  removeFileIfExists('cypress.config.ts');
+  removeFileIfExists('TESTING.md');
+
+  // Remove test directories
+  if (fs.existsSync('tests')) {
+    fs.rmSync('tests', { recursive: true, force: true });
+  }
+  if (fs.existsSync('cypress')) {
+    fs.rmSync('cypress', { recursive: true, force: true });
+  }
+  if (fs.existsSync('coverage')) {
+    fs.rmSync('coverage', { recursive: true, force: true });
+  }
+  if (fs.existsSync('test-results')) {
+    fs.rmSync('test-results', { recursive: true, force: true });
+  }
+  if (fs.existsSync('playwright-report')) {
+    fs.rmSync('playwright-report', { recursive: true, force: true });
+  }
+
+  log('✅ Testing files removed', 'green');
+}
+
+function removeTestingDependencies(): void {
+  log('📦 Removing testing dependencies from package.json...', 'yellow');
+
+  const packageJsonPath = 'package.json';
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    // Remove testing scripts
+    const testingScripts = [
+      'test',
+      'test:unit',
+      'test:unit:watch',
+      'test:unit:coverage',
+      'test:e2e',
+      'test:e2e:ui',
+      'test:e2e:headed',
+      'test:e2e:debug',
+      'test:cypress',
+      'test:cypress:run',
+      'test:cypress:headless',
+      'test:api',
+      'test:visual',
+      'test:accessibility'
+    ];
+
+    testingScripts.forEach(script => {
+      if (packageJson.scripts && packageJson.scripts[script]) {
+        delete packageJson.scripts[script];
+      }
+    });
+
+    // Remove testing dependencies
+    const testingDeps = [
+      '@playwright/test',
+      '@testing-library/react',
+      '@testing-library/user-event',
+      '@vitejs/plugin-react',
+      '@vitest/coverage-v8',
+      'axe-core',
+      'cypress',
+      'cypress-axe',
+      'jsdom',
+      'newman',
+      'playwright-axe',
+      'vitest'
+    ];
+
+    testingDeps.forEach(dep => {
+      if (packageJson.devDependencies && packageJson.devDependencies[dep]) {
+        delete packageJson.devDependencies[dep];
+      }
+    });
+
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    log('✅ Testing dependencies removed from package.json', 'green');
+  }
+}
+
 async function main(): Promise<void> {
   log('🧹 Enhanced Next.js Template Cleanup', 'blue');
   console.log('');
