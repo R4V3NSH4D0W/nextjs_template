@@ -17,9 +17,9 @@ npm run daily-report
 
 ## Today's Reports
 
-- [📊 Today's Aggregate Report](./daily/2025-06-27.md)
+- [📊 Today's Aggregate Report](./daily/2025-07-09.md)
 - 👥 **Individual Reports:**
-  - [R4V3NSH4D0W](./daily/contributors/2025-06-27-r4v3nsh4d0w.md)
+  - [R4V3NSH4D0W](./daily/contributors/2025-07-09-r4v3nsh4d0w.md)
 
 ## Navigation
 
